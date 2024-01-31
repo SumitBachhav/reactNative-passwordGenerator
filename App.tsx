@@ -1,28 +1,34 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useState} from 'react';
 
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 // Form validation
-import * as Yup from 'yup'
-import { Formik } from 'formik';
+import * as Yup from 'yup';
+import {Formik} from 'formik';
 // YOUTUBE:
 const PasswordSchema = Yup.object().shape({
   passwordLength: Yup.number()
-  .min(4, 'Should be min of 4 characters')
-  .max(16, 'Should be max of 16 characters')
-  .required('Length is required')
-  
-})
+    .min(4, 'Should be min of 4 characters')
+    .max(16, 'Should be max of 16 characters')
+    .required('Length is required'),
+});
 export default function App() {
+  const [password, setPassword] = useState('');
+  const [isPassGenerated, setIsPassGenerated] = useState(false);
 
-  const [password, setPassword] = useState('')
-  const [isPassGenerated, setIsPassGenerated] = useState(false)
-
-  const [lowerCase, setLowerCase] = useState(true)
-  const [upperCase, setupperCase] = useState(false)
-  const [numbers, setNumbers] = useState(false)
-  const [symbols, setSymbols] = useState(false)
+  const [lowerCase, setLowerCase] = useState(true);
+  const [upperCase, setupperCase] = useState(false);
+  const [numbers, setNumbers] = useState(false);
+  const [symbols, setSymbols] = useState(false);
 
   const generatePasswordString = (passwordLength: number) => {
     let characterList = '';
@@ -33,46 +39,41 @@ export default function App() {
     const specialChars = '!@#$%^&*()_+';
 
     if (upperCase) {
-      characterList += upperCaseChars
+      characterList += upperCaseChars;
     }
     if (lowerCase) {
-      characterList += lowerCaseChars
+      characterList += lowerCaseChars;
     }
     if (numbers) {
-      characterList += digitChars
+      characterList += digitChars;
     }
     if (symbols) {
-      characterList += specialChars
+      characterList += specialChars;
     }
 
-    const passwordResult = createPassword(characterList, passwordLength )
+    const passwordResult = createPassword(characterList, passwordLength);
 
-    setPassword(passwordResult)
-    setIsPassGenerated(true)
-    
-  }
+    setPassword(passwordResult);
+    setIsPassGenerated(true);
+  };
 
   const createPassword = (characters: string, passwordLength: number) => {
-    let result = ''
+    let result = '';
     for (let i = 0; i < passwordLength; i++) {
-      const characterIndex = Math.round(Math.random() * characters.length)
-      result += characters.charAt(characterIndex)
+      const characterIndex = Math.round(Math.random() * characters.length);
+      result += characters.charAt(characterIndex);
     }
-    return result
-    console.log("hitesh");
-    
-  }
+    return result;
+  };
 
   const resetPasswordState = () => {
-    setPassword('')
-    setIsPassGenerated(false)
-    setLowerCase(true)
-    setupperCase(false)
-    setNumbers(false)
-    setSymbols(false)
-    
-    
-  }
+    setPassword('');
+    setIsPassGenerated(false);
+    setLowerCase(true);
+    setupperCase(false);
+    setNumbers(false);
+    setSymbols(false);
+  };
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
@@ -80,52 +81,51 @@ export default function App() {
         <View style={styles.formContainer}>
           <Text style={styles.title}>Password Generator</Text>
           <Formik
-       initialValues={{ passwordLength: '' }} //values to be keep tracked of
-       validationSchema={PasswordSchema} //using validationSchema of yup
-       onSubmit={ values => {
-        console.log(values);
-        generatePasswordString(+values.passwordLength) 
-       }}
-     >
-       {({
-         values,
-         errors,
-         touched,
-         isValid,
-         handleChange,
-         handleSubmit,
-         handleReset,
-         /* and other goodies */
-       }) => (
-         <>
-         <View style={styles.inputWrapper}>
-          <View style={styles.inputColumn}>
-            <Text style={styles.heading}>Password Length</Text>
-            {touched.passwordLength && errors.passwordLength && ( //error message
-              <Text style={styles.errorText}>
-                {errors.passwordLength}
-              </Text>
-            )}
-            
-          </View>
-          <TextInput
-            style={styles.inputStyle}
-            value={values.passwordLength} //where to store value values.passwordLength 
-            onChangeText={handleChange('passwordLength')} //what should happen when somebody changes text, passwordLength is being tracked
-            placeholder="Ex. 8"
-            keyboardType='numeric'
-            />
-         </View>
-         <View style={styles.inputWrapper}>
-          <Text style={styles.heading}>Include lowercase</Text>
-          <BouncyCheckbox
-          disableBuiltInState
-          isChecked={lowerCase}
-          onPress={() => setLowerCase(!lowerCase)}
-          fillColor="#29AB87"
-          />
-         </View>
-         <View style={styles.inputWrapper}>
+            initialValues={{passwordLength: ''}} //values to be keep tracked of
+            validationSchema={PasswordSchema} //using validationSchema of yup
+            onSubmit={values => {
+              console.log(values);
+              generatePasswordString(+values.passwordLength);
+            }}>
+            {({
+              values,
+              errors,
+              touched,
+              isValid,
+              handleChange,
+              handleSubmit,
+              handleReset,
+              /* and other goodies */
+            }) => (
+              <>
+                <View style={styles.inputWrapper}>
+                  <View style={styles.inputColumn}>
+                    <Text style={styles.heading}>Password Length</Text>
+                    {touched.passwordLength &&
+                      errors.passwordLength && ( //error message
+                        <Text style={styles.errorText}>
+                          {errors.passwordLength}
+                        </Text>
+                      )}
+                  </View>
+                  <TextInput
+                    style={styles.inputStyle}
+                    value={values.passwordLength} //where to store value values.passwordLength
+                    onChangeText={handleChange('passwordLength')} //what should happen when somebody changes text, passwordLength is being tracked
+                    placeholder="Ex. 8"
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.inputWrapper}>
+                  <Text style={styles.heading}>Include lowercase</Text>
+                  <BouncyCheckbox
+                    disableBuiltInState
+                    isChecked={lowerCase}
+                    onPress={() => setLowerCase(!lowerCase)}
+                    fillColor="#29AB87"
+                  />
+                </View>
+                <View style={styles.inputWrapper}>
                   <Text style={styles.heading}>Include Uppercase letters</Text>
                   <BouncyCheckbox
                     disableBuiltInState
@@ -152,38 +152,39 @@ export default function App() {
                     fillColor="#FC80A5"
                   />
                 </View>
-         <View style={styles.formActions}>
-          <TouchableOpacity
-          disabled={!isValid}
-          style={styles.primaryBtn}
-          onPress={handleSubmit} //handleSubmit calls onSubmit
-          >
-            <Text style={styles.primaryBtnTxt}>Generate Password</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-          style={styles.secondaryBtn}
-          onPress={ () => {
-            handleReset();
-            resetPasswordState()
-          }}
-          >
-            <Text style={styles.secondaryBtnTxt}>Reset</Text>
-          </TouchableOpacity>
-         </View>
-         </>
-       )}
+                <View style={styles.formActions}>
+                  <TouchableOpacity
+                    disabled={!isValid}
+                    style={styles.primaryBtn}
+                    onPress={handleSubmit} //handleSubmit calls onSubmit
+                  >
+                    <Text style={styles.primaryBtnTxt}>Generate Password</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.secondaryBtn}
+                    onPress={() => {
+                      handleReset();
+                      resetPasswordState();
+                    }}>
+                    <Text style={styles.secondaryBtnTxt}>Reset</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
           </Formik>
         </View>
         {isPassGenerated ? (
           <View style={[styles.card, styles.cardElevated]}>
             <Text style={styles.subTitle}>Result:</Text>
             <Text style={styles.description}>Long Press to copy</Text>
-            <Text selectable={true} style={styles.generatedPassword}>{password}</Text>
+            <Text selectable={true} style={styles.generatedPassword}>
+              {password}
+            </Text>
           </View>
         ) : null}
       </SafeAreaView>
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -277,13 +278,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     marginBottom: 12,
-    color:'#000'
+    color: '#000',
   },
 });
 
-
 //import * as Yup from 'yup'   -> validator
-
 
 // const PasswordSchema = Yup.object().shape({})
 
@@ -306,9 +305,10 @@ const styles = StyleSheet.create({
 //const [lowerCase, setLowerCase] = useState(true)
 
 //formik
-//formik keeps track of your form's states and then exposes it plus a few reusable methods and event handlers 
-//(handleChange, handleBlur, handleSubmit) to your from via props. handleChange and handleBlur work exactly as 
+//formik keeps track of your form's states and then exposes it plus a few reusable methods and event handlers
+//(handleChange, handleBlur, handleSubmit) to your from via props. handleChange and handleBlur work exactly as
 //expected - they use a name or id attribute to figure out which field to update
 
-{/* <ScrollView keyboardShouldPersistTaps="handled"></ScrollView> */}
-
+{
+  /* <ScrollView keyboardShouldPersistTaps="handled"></ScrollView> */
+}
